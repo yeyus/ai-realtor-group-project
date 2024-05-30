@@ -25,9 +25,10 @@ This section is to talk about the different options we have to give answers to t
 * Which Dataset to use?
 * Chatbot? prediction based on data?
 
-
 #### Dataset
 
 #### Libraries
+* https://github.com/Bunsly/HomeHarvest
+* https://pypi.org/project/langchain-openai/
 
 #### Flow

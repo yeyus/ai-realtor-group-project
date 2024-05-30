@@ -1,0 +1,2 @@
+homeharvest==0.3.28
+langchain-openai==0.1.8
