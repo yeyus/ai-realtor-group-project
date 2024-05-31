@@ -30,5 +30,6 @@ This section is to talk about the different options we have to give answers to t
 #### Libraries
 * https://github.com/Bunsly/HomeHarvest
 * https://pypi.org/project/langchain-openai/
+* https://chainlit.io/
 
 #### Flow
