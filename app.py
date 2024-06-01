@@ -6,6 +6,7 @@ from langchain import hub
 from langchain.schema import StrOutputParser
 from langchain.schema.runnable import Runnable
 from langchain.schema.runnable.config import RunnableConfig
+from langchain.chains.conversation.memory import ConversationBufferWindowMemory
 from langchain_core.runnables.passthrough import RunnablePassthrough
 from langchain.agents import AgentExecutor, create_react_agent
 
@@ -16,8 +17,16 @@ from agent.tool import HomeSearchResultsTool
 load_dotenv()
 openai_api_key = os.getenv("OPENAI_API_KEY")
 
+# # Setting up conversational memory
+# conversational_memory = ConversationBufferWindowMemory(
+#     memory_key='chat_history',
+#     k=5,
+#     return_messages=True
+# )
+
 tools = [HomeSearchResultsTool(max_results=5)]
-prompt = prompt = hub.pull("hwchase17/react")
+# prompt = prompt = hub.pull("hwchase17/react-chat") 
+prompt = hub.pull("hwchase17/react") 
 
 @cl.on_chat_start
 async def on_chat_start():
