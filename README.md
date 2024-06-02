@@ -1,4 +1,5 @@
-## Real Estate - Group assignment
+# Real Estate - Group assignment
+
 
 ### Datasets
 * Historical Data: [Historical Housing Data](https://www.car.org/en/marketdata/data/housingdata) 
@@ -27,9 +28,34 @@ This section is to talk about the different options we have to give answers to t
 
 #### Dataset
 
-#### Libraries
+## Agent
+
+### Description
+
+Used Agent is: `"hwchase17/structured-chat-agent"`. The structured chat agent is a simple chatbot that can answer questions about structured data. The agent is using the OpenAI API to generate the response. It is currently using the `gpt-3.5-turbo-0125` model, which is the cheapest model available in the OpenAI API.
+
+### How to run the code locally
+
+Configure the Python environment with the following environment variables and requirements:
+1. Create `.env` file with the following content:
+
+```
+OPENAI_API_KEY=<YOUR_API_KEY>
+```
+
+2. Install the requirements
+
+```
+pip install -r requirements.txt
+```
+
+### Run the code
+
+```
+chainlit run app.py
+```
+
+## Libraries
 * https://github.com/Bunsly/HomeHarvest
 * https://pypi.org/project/langchain-openai/
 * https://chainlit.io/
-
-#### Flow
