@@ -17,22 +17,21 @@ from agent.tool import HomeSearchResultsTool
 load_dotenv()
 openai_api_key = os.getenv("OPENAI_API_KEY")
 
-# # Setting up conversational memory
-# conversational_memory = ConversationBufferWindowMemory(
-#     memory_key='chat_history',
-#     k=5,
-#     return_messages=True
-# )
+# Setting up conversational memory
+conversational_memory = ConversationBufferWindowMemory(
+    memory_key='chat_history',
+    k=5,
+    return_messages=True
+)
 
 tools = [HomeSearchResultsTool(max_results=5)]
-# prompt = prompt = hub.pull("hwchase17/react-chat") 
 prompt = hub.pull("hwchase17/structured-chat-agent") 
 
 @cl.on_chat_start
 async def on_chat_start():
     model = ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0, streaming=True)    
     agent = create_structured_chat_agent(model, tools, prompt)
-    agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True, handle_parsing_errors=True)
+    agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True, handle_parsing_errors=True, memory=conversational_memory)
 
     cl.user_session.set("agent_executor", agent_executor)
 
