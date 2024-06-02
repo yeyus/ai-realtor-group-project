@@ -32,7 +32,7 @@ This section is to talk about the different options we have to give answers to t
 
 ### Description
 
-Used Agent is: `hwchase17/react`. This is used as prompt to generate a response to the user's input. React agents are designed to generate responses to user inputs in a conversational manner. The agent is using the OpenAI API to generate the response. It is currently using the `gpt-3.5-turbo-0125` model, which is the cheapest model available in the OpenAI API.
+Used Agent is: `"hwchase17/structured-chat-agent"`. The structured chat agent is a simple chatbot that can answer questions about structured data. The agent is using the OpenAI API to generate the response. It is currently using the `gpt-3.5-turbo-0125` model, which is the cheapest model available in the OpenAI API.
 
 ### How to run the code locally
 
