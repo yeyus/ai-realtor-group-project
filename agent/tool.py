@@ -18,13 +18,6 @@ from agent.listingscraper.parse import (
     save_row_data,
 )
 
-# Set debug to true
-set_verbose(True)
-
-# ==============================================================================
-# Start
-# ==============================================================================
-
 
 class ListingType(Enum):
     SOLD = "SOLD"
@@ -117,13 +110,11 @@ class HomeSearchResultsTool(BaseTool):
         run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> str:
         try:
-            # TODO (btamayo): Idea, we can also limit it to California or add a tool that
-            # "translates" a "location" user input (e.g. Bay Area) to  a location search term
-
             if listing_type is None:
                 listing_type = ListingType.FOR_SALE
 
-            # TODO (btamayo): Validate the inputs here so that we have proper use of API calls. Sometimes the LLM does not "correctly" use or infer the "right" inputs.
+            # TODO (btamayo): Validate the inputs here so that we have proper use of API calls. Sometimes 
+            # it does not "correctly" use or infer the "right" inputs.
 
             properties = scrape_property(
                 location=location, listing_type="FOR_SALE", radius=radius

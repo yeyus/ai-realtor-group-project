@@ -19,11 +19,6 @@ from agent.tool import HomeSearchResultsTool
 load_dotenv()
 openai_api_key = os.getenv("OPENAI_API_KEY")
 
-
-# ==============================================================================
-# Start
-# ==============================================================================
-
 # Setting up conversational memory
 conversational_memory = ConversationBufferWindowMemory(
     memory_key="chat_history", k=5, return_messages=True
