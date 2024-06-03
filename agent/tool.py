@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Type, Optional, Literal
 from string import Template
 from pandas import DataFrame
@@ -32,11 +33,18 @@ def expand_row(property: DataFrame) -> str:
     return template.substitute(property.to_dict())
 
 
+class ListingType(Enum):
+    SOLD = "SOLD"
+    FOR_SALE = "FOR_SALE"
+    FOR_RENT = "FOR_RENT"
+    PENDING = "PENDING"
+
 class HomeSearchResultsInput(BaseModel):
     """Input for home search library"""
 
     location: str = Field(description="house location to search")
-    listing_type: Literal["SOLD", "FOR_SALE", "FOR_RENT", "PENDING"] = Field(
+    listing_type: ListingType = Field(
+        default=ListingType.FOR_SALE,
         description="type of listing"
     )
     radius: Optional[float] = None
@@ -55,18 +63,23 @@ class HomeSearchResultsTool(BaseTool):
     def _run(
         self,
         location: str,
-        listing_type: Literal["SOLD", "FOR_SALE", "FOR_RENT", "PENDING"],
+        listing_type: Optional[ListingType] = "FOR_SALE",
         radius: Optional[float] = None,
         run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> str:
-        properties = scrape_property(
-            location=location,
-            listing_type=listing_type,
-            radius=radius
-        )
+        try:
+            properties = scrape_property(
+                location=location,
+                listing_type=listing_type.value,
+                radius=radius
+            )
+            
+            print(properties)
 
-        properties_expanded = []
-        for _, row in properties.iloc[0:self.max_results].iterrows():
-            properties_expanded.append(expand_row(row))
-        
+            properties_expanded = []
+            for _, row in properties.iloc[0:self.max_results].iterrows():
+                properties_expanded.append(expand_row(row))
+        except Exception as e:
+            return str(e)
+            
         return "\n".join(properties_expanded)
