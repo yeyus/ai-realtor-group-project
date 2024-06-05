@@ -25,7 +25,7 @@ conversational_memory = ConversationBufferWindowMemory(
 )
 
 tools = [HomeSearchResultsTool(max_results=5)]
-prompt = hub.pull("hwchase17/structured-chat-agent")
+prompt = hub.pull("m3libea/ai-realtor")
 
 
 def _handle_error(error) -> str:
