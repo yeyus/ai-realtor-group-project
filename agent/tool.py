@@ -36,24 +36,26 @@ description: $text
 """
 )
 
+
 def format_human_readable(property: DataFrame) -> str:
     return human_readable_row_tpl.substitute(property.to_dict())
 
 
 def save_rows_to_csv(properties: DataFrame, filename: str = "listings.csv") -> str:
     print(f"Saving rows data to {filename}...")
-    
+
     # todo: update path access to be cleaner
     data_base_dir_path = Path(os.getcwd(), "data")
     listings_csv_path = Path(data_base_dir_path, filename)
 
     if not data_base_dir_path.exists():
         data_base_dir_path.mkdir()
-        
+
     if not listings_csv_path.exists():
         listings_csv_path.touch()
 
     properties.to_csv(listings_csv_path)
+
 
 class ListingType(Enum):
     SOLD = "SOLD"
@@ -83,14 +85,21 @@ class HomeSearchResultsInput(BaseModel):
         description="""
         Radius in miles to find comparable properties based on individual addresses. Example: 5.5 (fetches properties within a 5.5-mile radius if location is set."""
     )
-    
+
     # Everything below is a param to the Tool, but not to the homeharvest scraper
-    bedroom_number: Optional[float] = Field(description="""The number of bedrooms a user is looking for in a property. If not provided, it defaults to 2.0.
-    """)
-    bathroom_number: Optional[float] = Field(description="""The number of bathrooms a user is looking for in a property. If not provided, it defaults to 2.0.""")
-    min_price: Optional[float] = Field(description="""The minimum price of a property to search for. If not provided, it defaults to 1000000.0.""")
-    max_price: Optional[float] = Field(description="""The maximum price of a property to search for. If not provided, it defaults to 10000000.0.""")
-    
+    bedroom_number: Optional[float] = Field(
+        description="""The number of bedrooms a user is looking for in a property. If not provided, it defaults to 2.0.
+    """
+    )
+    bathroom_number: Optional[float] = Field(
+        description="""The number of bathrooms a user is looking for in a property. If not provided, it defaults to 2.0."""
+    )
+    min_price: Optional[float] = Field(
+        description="""The minimum price of a property to search for. If not provided, it defaults to 1000000.0."""
+    )
+    max_price: Optional[float] = Field(
+        description="""The maximum price of a property to search for. If not provided, it defaults to 10000000.0."""
+    )
 
 
 # This subclasses langchain's BaseTool to create a custom Tool to pass into OpenAI.
@@ -194,16 +203,17 @@ class HomeSearchResultsTool(BaseTool):
             logging.info("Inferred bathroom_number for filtering: %s", bathroom_number)
             logging.info("Inferred listing_type for filtering: %s", listing_type)
             logging.info("Inferred radius for radius: %s", radius)
-            
-            # TODO: Add programmatic filter [Jun 5, 2024, bianca-tamayo]  
+
+            # TODO: Add programmatic filter [Jun 5, 2024, bianca-tamayo]
+            print(f"Properties length: {len(properties)}")
+            print(properties[0])
 
             properties_expanded = []
             for _, row in properties.iloc[0 : self.max_results].iterrows():
                 # Format the row and add it to return
                 expanded_row = format_human_readable(row)
                 properties_expanded.append(expanded_row)
-            
-            
+
             # print(f"Saving rows...")
             # save_rows_to_csv(properties)
         except Exception as e:

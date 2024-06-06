@@ -84,10 +84,11 @@ async def on_message(message: cl.Message):
 
     try:
         response = agent_executor.invoke({"input": message.content})
-        msg = cl.Message(content=response["output"])
-        await msg.send()
 
     except Exception as ex:
         print("\n\nError Stacktrace: \n\n")
         traceback.print_stack()
         _handle_error(ex)
+
+    msg = cl.Message(content=response["output"])
+    await msg.send()
