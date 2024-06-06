@@ -33,7 +33,7 @@ conversational_memory = ConversationBufferWindowMemory(
     memory_key="chat_history", k=5, return_messages=True
 )
 
-tools = [HomeSearchResultsTool(max_results=5)]
+tools = [HomeSearchResultsTool(max_results=20)]
 prompt = hub.pull("hwchase17/structured-chat-agent")
 
 

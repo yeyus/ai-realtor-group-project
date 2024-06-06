@@ -165,6 +165,7 @@ class HomeSearchResultsTool(BaseTool):
         self,
         location: str,
         listing_type: Optional[ListingType] = "FOR_SALE",
+        # todo: what happens if we input a float? 
         min_price: Optional[int] = 10000000,
         max_price: Optional[int] = 100000000,
         bedroom_number: Optional[float] = 2.0,
@@ -193,10 +194,15 @@ class HomeSearchResultsTool(BaseTool):
             logging.info("Inferred listing_type for filtering: %s", listing_type)
             logging.info("Inferred radius for radius: %s", radius)
             
+            res_df = properties[properties['list_price'] <= max_price]
+            # res_df = properties[properties['list_price'] >= min_price]
+            # res_df = res_df[res_df['bedroom_number'] >= bedroom_number]
+            # res_df = res_df[res_df['bathroom_number'] >= bathroom_number] 
+            
             save_rows_to_csv(properties)
 
             properties_expanded = []
-            for _, row in properties.iloc[0 : self.max_results].iterrows():
+            for _, row in res_df.iloc[0 : self.max_results].iterrows():
                 expanded_row = format_human_readable(row)
                 properties_expanded.append(expanded_row)
         except Exception as e:
