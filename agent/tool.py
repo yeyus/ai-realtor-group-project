@@ -1,4 +1,5 @@
 from enum import Enum
+import logging
 from typing import Type, Optional, Literal
 from string import Template
 from pandas import DataFrame
@@ -99,6 +100,7 @@ class HomeSearchResultsTool(BaseTool):
     description: str = (
         "Uses homeharvest as a result fetching tool for the real state market"
     )
+
     max_results: int = 5
     args_schema: Type[BaseModel] = HomeSearchResultsInput
 
@@ -106,6 +108,10 @@ class HomeSearchResultsTool(BaseTool):
         self,
         location: str,
         listing_type: Optional[ListingType] = "FOR_SALE",
+        min_price: Optional[int] = 10000000,
+        max_price: Optional[int] = 100000000,
+        bedroom_number: Optional[float] = 2.0,
+        bathroom_number: Optional[float] = 2.0,
         radius: Optional[float] = 5.0,
         run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> str:
@@ -113,7 +119,7 @@ class HomeSearchResultsTool(BaseTool):
             if listing_type is None:
                 listing_type = ListingType.FOR_SALE
 
-            # TODO (btamayo): Validate the inputs here so that we have proper use of API calls. Sometimes 
+            # TODO (btamayo): Validate the inputs here so that we have proper use of API calls. Sometimes
             # it does not "correctly" use or infer the "right" inputs.
 
             properties = scrape_property(
@@ -122,9 +128,17 @@ class HomeSearchResultsTool(BaseTool):
 
             print(properties)
 
+            logging.info("Inferred location for location: %s", location)
+            logging.info("Inferred min_price for filtering: %s", min_price)
+            logging.info("Inferred max_price for filtering: %s", max_price)
+            logging.info("Inferred bedroom_number for filtering: %s", bedroom_number)
+            logging.info("Inferred bathroom_number for filtering: %s", bathroom_number)
+            logging.info("Inferred listing_type for filtering: %s", listing_type)
+            logging.info("Inferred radius for radius: %s", radius)
+
             properties_expanded = []
             for _, row in properties.iloc[0 : self.max_results].iterrows():
-                save_row_data(row)
+                # save_row_data(row)
                 expanded_row = format_human_readable(row)
                 properties_expanded.append(expanded_row)
         except Exception as e:

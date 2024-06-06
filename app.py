@@ -1,4 +1,6 @@
+import logging
 import os
+import sys
 import chainlit as cl
 import traceback
 
@@ -15,6 +17,13 @@ from langchain.agents import AgentExecutor, create_structured_chat_agent
 from langchain_openai import ChatOpenAI
 
 from agent.tool import HomeSearchResultsTool
+
+logging.getLogger("urllib3").setLevel(logging.CRITICAL)
+logging.basicConfig(
+    stream=sys.stderr,
+    level=logging.DEBUG,
+    format="%(module)s - %(filename)s - %(levelname)s - %(message)s",
+)
 
 load_dotenv()
 openai_api_key = os.getenv("OPENAI_API_KEY")
@@ -47,7 +56,7 @@ async def on_chat_start():
         agent=agent,
         tools=tools,
         verbose=True,
-        handle_parsing_errors=False,
+        handle_parsing_errors=True,
         memory=conversational_memory,
     )
 
