@@ -219,4 +219,4 @@ class HomeSearchResultsTool(BaseTool):
         except Exception as e:
             return str(e)
 
-        return "\n".join(properties_expanded[0 : self.max_results])
+        return "\n".join(properties_expanded)
