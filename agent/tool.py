@@ -158,7 +158,7 @@ class HomeSearchResultsTool(BaseTool):
         "Uses homeharvest as a result fetching tool for the real state market"
     )
 
-    max_results: int = 5
+    max_results: int = 20
     args_schema: Type[BaseModel] = HomeSearchResultsInput
 
     def _run(
