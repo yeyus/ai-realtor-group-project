@@ -123,8 +123,8 @@ class HomeSearchResultsTool(BaseTool):
             print(properties)
 
             properties_expanded = []
-            for _, row in properties.iloc[0 : self.max_results].iterrows():
-                save_row_data(row)
+            for _, row in properties.iloc[0:self.max_results].iterrows():
+                #save_row_data(row)
                 expanded_row = format_human_readable(row)
                 properties_expanded.append(expanded_row)
         except Exception as e:

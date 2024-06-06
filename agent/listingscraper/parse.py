@@ -69,29 +69,26 @@ csv_row_tpl = Template(
     _get_csv_tpl()
 )
 
-human_readable_row_tpl = Template(
-    """
----
-$street, $city, $zip_code
 
-property style: $style
-street: $street
-city: $city
-zip Code: $zip_code
-bedrooms: $beds bedrooms
-stories: $stories stories
-full baths: $full_baths
-half baths: $half_baths
-sqft: $sqft sqft
-listed price: $list_price
-sold for: $sold_price
-nearby schools: $nearby_schools
+human_readable_row_tpl = Template("""
+---
+Property style: $style
+Street: $street
+City: $city
+Zip Code: $zip_code
+$beds beds
+$stories stories
+$full_baths full baths
+$half_baths half baths
+$sqft sqft
+listed for $list_price
+sold for $sold_price
+nearby schools are $nearby_schools
 listing url: $property_url
 
 description: $text
 ---
-"""
-)
+""")
 
 
 def expand_to_csv_row(property: DataFrame) -> str:
