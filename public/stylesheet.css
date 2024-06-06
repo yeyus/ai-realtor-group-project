@@ -1,0 +1,8 @@
+#welcome-screen img[src="public/logo.png"] {
+    display: block;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    
+    width: 200px;
+}
