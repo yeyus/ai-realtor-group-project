@@ -27,6 +27,8 @@ logging.basicConfig(
 
 load_dotenv()
 openai_api_key = os.getenv("OPENAI_API_KEY")
+langchain_api_key = os.getenv("LANGCHAIN_API_KEY", "")
+langchain_prompt_name = os.getenv("LANGCHAIN_PROMPT", "hwchase17/structured-chat-agent")
 
 # Setting up conversational memory
 conversational_memory = ConversationBufferWindowMemory(
@@ -34,12 +36,7 @@ conversational_memory = ConversationBufferWindowMemory(
 )
 
 tools = [HomeSearchResultsTool(max_results=20)]
-prompt = hub.pull("hwchase17/structured-chat-agent")
-
-
-def _handle_error(error) -> str:
-    print(f"\n\nError: {error}")
-    return str(error)
+prompt = hub.pull(langchain_prompt_name, api_key=langchain_api_key)
 
 
 @cl.on_chat_start
@@ -70,9 +67,9 @@ async def on_message(message: cl.Message):
     try:
         response = agent_executor.invoke({"input": message.content})
     except Exception as ex:
+        print(f"\n\nError: {ex}\n\n")
         print("\n\nError Stacktrace: \n\n")
         traceback.print_stack()
-        _handle_error(ex)
 
     msg = cl.Message(content=response["output"])
 

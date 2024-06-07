@@ -13,7 +13,6 @@ from langchain_core.pydantic_v1 import BaseModel, Field
 from langchain_core.tools import BaseTool
 
 
-
 human_readable_row_tpl = Template(
     """
 ---
@@ -79,7 +78,7 @@ class HomeSearchResultsInput(BaseModel):
     )
 
     # Everything below is a param to the Tool, but not to the homeharvest scraper
-    bedroom_number: Optional[float] = Field(
+    bedroom_number: Optional[int] = Field(
         description="""The number of bedrooms a user is looking for in a property. If not provided, it defaults to 2.0.
     """
     )
@@ -87,10 +86,10 @@ class HomeSearchResultsInput(BaseModel):
         description="""The number of bathrooms a user is looking for in a property. If not provided, it defaults to 2.0."""
     )
     min_price: Optional[int] = Field(
-        description="""The minimum price of a property to search for. If not provided, it defaults to 10000000"""
+        description="""The minimum price of a property to search for in United States Dollars. If not provided, it defaults to 10000000"""
     )
     max_price: Optional[int] = Field(
-        description="""The maximum price of a property to search for. If not provided, it defaults to 100000000"""
+        description="""The maximum price of a property to search for in United States Dollars. If not provided, it defaults to 100000000"""
     )
 
 
@@ -165,10 +164,10 @@ class HomeSearchResultsTool(BaseTool):
         self,
         location: str,
         listing_type: Optional[ListingType] = "FOR_SALE",
-        # todo: what happens if we input a float? 
+        # todo: what happens if we input a float?
         min_price: Optional[int] = 10000000,
         max_price: Optional[int] = 100000000,
-        bedroom_number: Optional[float] = 2.0,
+        bedroom_number: Optional[int] = 2.0,
         bathroom_number: Optional[float] = 2.0,
         radius: Optional[float] = 5.0,
         run_manager: Optional[CallbackManagerForToolRun] = None,
@@ -185,6 +184,7 @@ class HomeSearchResultsTool(BaseTool):
             )
 
             print(properties)
+            save_rows_to_csv(properties)
 
             logging.info("Inferred location for location: %s", location)
             logging.info("Inferred min_price for filtering: %s", min_price)
@@ -193,13 +193,14 @@ class HomeSearchResultsTool(BaseTool):
             logging.info("Inferred bathroom_number for filtering: %s", bathroom_number)
             logging.info("Inferred listing_type for filtering: %s", listing_type)
             logging.info("Inferred radius for radius: %s", radius)
-            
-            res_df = properties[properties['list_price'] <= max_price]
-            # res_df = properties[properties['list_price'] >= min_price]
-            # res_df = res_df[res_df['bedroom_number'] >= bedroom_number]
-            # res_df = res_df[res_df['bathroom_number'] >= bathroom_number] 
-            
-            save_rows_to_csv(properties)
+
+            res_df = properties[properties["list_price"] <= max_price]
+            res_df = res_df[res_df["list_price"] >= min_price]
+            res_df = res_df[res_df["beds"] >= bedroom_number]
+
+            # not sure how the LLM is going to parse this, but we'll see
+            res_df["bathrooms"] = res_df["full_baths"] + (res_df["half_baths"] * 0.5)
+            res_df = res_df[res_df["bathrooms"] >= bathroom_number]
 
             properties_expanded = []
             for _, row in res_df.iloc[0 : self.max_results].iterrows():
