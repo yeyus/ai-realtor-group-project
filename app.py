@@ -10,6 +10,7 @@ from langchain.schema.runnable import Runnable
 from langchain.schema.runnable.config import RunnableConfig
 from langchain.chains.conversation.memory import ConversationBufferWindowMemory
 from langchain_core.runnables.passthrough import RunnablePassthrough
+from langchain_core.messages import HumanMessage, AIMessage
 from langchain.agents import AgentExecutor, create_structured_chat_agent
 
 from langchain_openai import ChatOpenAI
@@ -25,8 +26,7 @@ conversational_memory = ConversationBufferWindowMemory(
 )
 
 tools = [HomeSearchResultsTool(max_results=5)]
-prompt = hub.pull("hwchase17/structured-chat-agent")
-
+prompt = hub.pull("hwchase17/structured-chat-agent") 
 
 def _handle_error(error) -> str:
     print(f"\n\nError: {error}")
@@ -49,22 +49,24 @@ async def on_chat_start():
         verbose=True,
         handle_parsing_errors=False,
         memory=conversational_memory,
+        return_intermediate_steps=True,
     )
 
     cl.user_session.set("agent_executor", agent_executor)
-
 
 @cl.on_message
 async def on_message(message: cl.Message):
     agent_executor = cl.user_session.get("agent_executor")
 
-    try:
-        response = agent_executor.invoke({"input": message.content})
-    except Exception as ex:
-        print("\n\nError Stacktrace: \n\n")
-        traceback.print_stack()
-        _handle_error(ex)
-
+    response = agent_executor.invoke({"input": message.content})
+    intermediate_steps = response["intermediate_steps"]
+    tool_messages = [i[1] for i in intermediate_steps if i[0].tool == "home_search_results_tool"]
+    
+    for message in tool_messages:
+        conversational_memory.chat_memory.add_messages(
+            [HumanMessage(type="human", content="Can you give me detailed information about the properties?"), AIMessage(content=message)]
+        )
+    
     msg = cl.Message(content=response["output"])
-
-    await msg.send()
+    
+    await msg.send()  
