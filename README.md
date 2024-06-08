@@ -7,7 +7,7 @@ sdk: docker
 app_file: app.py
 ---
 
-# Real Estate - Group assignment
+# ProperBot: Real Estate - Group assignment
 
 ### Datasets
 
