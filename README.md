@@ -1,3 +1,12 @@
+---
+title: Proper Bot
+emoji: 🏡
+colorFrom: green
+colorTo: blue
+sdk: docker
+app_file: app.py
+---
+
 # Real Estate - Group assignment
 
 ### Datasets
