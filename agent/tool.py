@@ -203,7 +203,12 @@ class HomeSearchResultsTool(BaseTool):
             res_df = res_df[res_df["bathrooms"] >= bathroom_number]
 
             properties_expanded = []
+<<<<<<< HEAD
             for _, row in res_df.iloc[0 : self.max_results].iterrows():
+=======
+            for _, row in properties.iloc[0:self.max_results].iterrows():
+                #save_row_data(row)
+>>>>>>> main
                 expanded_row = format_human_readable(row)
                 properties_expanded.append(expanded_row)
         except Exception as e:
