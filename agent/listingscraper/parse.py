@@ -99,20 +99,3 @@ def expand_to_csv_row(property: DataFrame) -> str:
 
 def format_human_readable(property: DataFrame) -> str:
     return human_readable_row_tpl.substitute(property.to_dict())
-
-
-def save_row_data(property: DataFrame, filename: str = "listings.csv") -> str:
-    # todo: update path access to be cleaner
-    data_base_dir_path = Path(os.getcwd(), "data")
-    listings_csv_path = Path(data_base_dir_path, filename)
-    listings_csv_path.touch()
-    
-    if not data_base_dir_path.exists():
-        data_base_dir_path.mkdir()
-    
-    with open(listings_csv_path, mode='r+') as file_handler:
-        file_handler.seek(0)  # Move to the start of the file
-        
-        reader = csv.reader(file_handler)
-        
-        append_or_skip_row(file_handler=file_handler, reader=reader, row_candidate=property)
