@@ -184,7 +184,6 @@ class HomeSearchResultsTool(BaseTool):
             )
 
             print(properties)
-            save_rows_to_csv(properties)
 
             logging.info("Inferred location for location: %s", location)
             logging.info("Inferred min_price for filtering: %s", min_price)
