@@ -64,19 +64,15 @@ async def on_chat_start():
 @cl.on_message
 async def on_message(message: cl.Message):
     agent_executor = cl.user_session.get("agent_executor")
-    try:
-        response = agent_executor.invoke({"input": message.content})
-        intermediate_steps = response["intermediate_steps"]
-        tool_messages = [i[1] for i in intermediate_steps if i[0].tool == "home_search_results_tool"]
-        
-        for message in tool_messages:
-            conversational_memory.chat_memory.add_messages(
-                [HumanMessage(type="human", content="Can you give me detailed information about the properties?"), AIMessage(content=message)]
-            )
-    except Exception as ex:
-        print(f"\n\nError: {ex}\n\n")
-        print("\n\nError Stacktrace: \n\n")
-        traceback.print_stack()
+   
+    response = agent_executor.invoke({"input": message.content})
+    intermediate_steps = response["intermediate_steps"]
+    tool_messages = [i[1] for i in intermediate_steps if i[0].tool == "home_search_results_tool"]
+
+    for message in tool_messages:
+        conversational_memory.chat_memory.add_messages(
+            [HumanMessage(type="human", content="Can you give me detailed information about the properties?"), AIMessage(content=message)]
+        )
     
     msg = cl.Message(content=response["output"])
     await msg.send()  

@@ -86,7 +86,7 @@ class HomeSearchResultsInput(BaseModel):
         description="""The number of bathrooms a user is looking for in a property. If not provided, it defaults to 2.0."""
     )
     min_price: Optional[int] = Field(
-        description="""The minimum price of a property to search for in United States Dollars. If not provided, it defaults to 10000000"""
+        description="""The minimum price of a property to search for in United States Dollars. If not provided, it defaults to 0"""
     )
     max_price: Optional[int] = Field(
         description="""The maximum price of a property to search for in United States Dollars. If not provided, it defaults to 100000000"""
@@ -165,7 +165,7 @@ class HomeSearchResultsTool(BaseTool):
         location: str,
         listing_type: Optional[ListingType] = "FOR_SALE",
         # todo: what happens if we input a float?
-        min_price: Optional[int] = 10000000,
+        min_price: Optional[int] = 0,
         max_price: Optional[int] = 100000000,
         bedroom_number: Optional[int] = 2.0,
         bathroom_number: Optional[float] = 2.0,
