@@ -29,7 +29,7 @@ logging.basicConfig(
 load_dotenv()
 openai_api_key = os.getenv("OPENAI_API_KEY")
 langchain_api_key = os.getenv("LANGCHAIN_API_KEY", "")
-langchain_prompt_name = os.getenv("LANGCHAIN_PROMPT", "hwchase17/structured-chat-agent")
+langchain_prompt_name = os.getenv("LANGCHAIN_PROMPT", "yeyus/structured-chat-agent-realtor")
 
 # Setting up conversational memory
 conversational_memory = ConversationBufferWindowMemory(
