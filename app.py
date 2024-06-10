@@ -2,16 +2,11 @@ import logging
 import os
 import sys
 import chainlit as cl
-import traceback
 
 from dotenv import load_dotenv
 
 from langchain import hub
-from langchain.schema import StrOutputParser
-from langchain.schema.runnable import Runnable
-from langchain.schema.runnable.config import RunnableConfig
 from langchain.chains.conversation.memory import ConversationBufferWindowMemory
-from langchain_core.runnables.passthrough import RunnablePassthrough
 from langchain_core.messages import HumanMessage, AIMessage
 from langchain.agents import AgentExecutor, create_structured_chat_agent
 
@@ -33,10 +28,10 @@ langchain_prompt_name = os.getenv("LANGCHAIN_PROMPT", "yeyus/structured-chat-age
 
 # Setting up conversational memory
 conversational_memory = ConversationBufferWindowMemory(
-    memory_key="chat_history", k=5, return_messages=True
+    memory_key="chat_history", k=8, return_messages=True
 )
 
-tools = [HomeSearchResultsTool(max_results=20)]
+tools = [HomeSearchResultsTool(max_results=10)]
 prompt = hub.pull(langchain_prompt_name, api_key=langchain_api_key)
 
 
